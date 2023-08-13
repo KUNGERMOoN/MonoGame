@@ -10,3 +10,6 @@
 [submodule "ThirdParty/StbImageWriteSharp"]
 	path = ThirdParty/StbImageWriteSharp
 	url = https://github.com/StbSharp/StbImageWriteSharp.git
+[submodule "ThirdParty/MonoGame.Dependencies"]
+	path = ThirdParty/MonoGame.Dependencies
+	url = https://github.com/KUNGERMOoN/MonoGame.Dependencies

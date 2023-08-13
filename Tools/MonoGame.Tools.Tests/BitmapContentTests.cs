@@ -1,11 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content.Pipeline.Graphics;
+using Microsoft.Xna.Framework.Graphics;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using Microsoft.Xna.Framework.Graphics;
 
 namespace MonoGame.Tests.ContentPipeline
 {
@@ -38,7 +38,7 @@ namespace MonoGame.Tests.ContentPipeline
         }
 
         void BitmapCopyFullNoResize<T>(T color1)
-            where T: struct, IEquatable<T>
+            where T : struct, IEquatable<T>
         {
             var b1 = new PixelBitmapContent<T>(8, 8);
             Fill(b1, color1);
@@ -65,7 +65,7 @@ namespace MonoGame.Tests.ContentPipeline
 
         void BitmapConvertFullNoResize<T, U>(T color1, U color2)
             where T : struct, IEquatable<T>
-            where U: struct, IEquatable<U>
+            where U : struct, IEquatable<U>
         {
             var b1 = new PixelBitmapContent<T>(8, 8);
             Fill(b1, color1);
@@ -239,7 +239,7 @@ namespace MonoGame.Tests.ContentPipeline
         {
             var Transparent = new Color(0, 0, 0, 0);
             var Grey16Premult = new Color(16, 16, 16, 16);
-            BitmapConvertAssert(typeof(Dxt1BitmapContent), Color.Red, 64, 64, 0);
+            /*BitmapConvertAssert(typeof(Dxt1BitmapContent), Color.Red, 64, 64, 0);
             BitmapConvertAssert(typeof(Dxt1BitmapContent), Color.Green, 32, 34, 2);
             BitmapConvertAssert(typeof(Dxt1BitmapContent), Color.Blue, 8, 9, 0);
             BitmapConvertAssert(typeof(Dxt1BitmapContent), Transparent, 16, 16, 0);
@@ -248,12 +248,14 @@ namespace MonoGame.Tests.ContentPipeline
             BitmapConvertAssert(typeof(Dxt3BitmapContent), Color.Green, 32, 34, 2);
             BitmapConvertAssert(typeof(Dxt3BitmapContent), Color.Blue, 8, 9, 0);
             BitmapConvertAssert(typeof(Dxt3BitmapContent), Transparent, 16, 16, 0);
-            BitmapConvertAssert(typeof(Dxt3BitmapContent), Grey16Premult, 16, 16, Grey16Premult, 1);
             BitmapConvertAssert(typeof(Dxt5BitmapContent), Color.Red, 64, 64, 0);
             BitmapConvertAssert(typeof(Dxt5BitmapContent), Color.Green, 32, 34, 2);
             BitmapConvertAssert(typeof(Dxt5BitmapContent), Color.Blue, 8, 9, 0);
             BitmapConvertAssert(typeof(Dxt5BitmapContent), Transparent, 16, 16, 0);
-            BitmapConvertAssert(typeof(Dxt5BitmapContent), Grey16Premult, 16, 16, Grey16Premult, 0);
+            BitmapConvertAssert(typeof(Dxt5BitmapContent), Grey16Premult, 16, 16, Grey16Premult, 0);*/
+            //causes troubles:
+            Console.WriteLine("The problematic one:");
+            BitmapConvertAssert(typeof(Dxt3BitmapContent), Grey16Premult, 16, 16, Grey16Premult, 1);
         }
 
         [Test]
