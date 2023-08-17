@@ -215,6 +215,15 @@ namespace MonoGame.Tests.ContentPipeline
 
             for (var p = 0; p < rgba.Length; p += 4)
             {
+                Console.WriteLine($"actual: {rgba[p + 0].ToString("D3")}, " +
+                    $"expected: {color.R.ToString("D3")}");
+                Console.WriteLine($"actual: {rgba[p + 1].ToString("D3")}, " +
+                    $"expected: {color.G.ToString("D3")}");
+                Console.WriteLine($"actual: {rgba[p + 2].ToString("D3")}, " +
+                    $"expected: {color.B.ToString("D3")}");
+                Console.WriteLine($"actual: {rgba[p + 3].ToString("D3")}, " +
+                    $"expected: {color.A.ToString("D3")}");
+
                 Assert.That(rgba[p + 0], Is.EqualTo(color.R).Within(range));
                 Assert.That(rgba[p + 1], Is.EqualTo(color.G).Within(range));
                 Assert.That(rgba[p + 2], Is.EqualTo(color.B).Within(range));
@@ -238,13 +247,13 @@ namespace MonoGame.Tests.ContentPipeline
         public void BitmapCompress()
         {
             var Transparent = new Color(0, 0, 0, 0);
-            var Grey16Premult = new Color(16, 16, 16, 16);
+            var Grey16Premult = new Color(16, 16, 16, 55);
             /*BitmapConvertAssert(typeof(Dxt1BitmapContent), Color.Red, 64, 64, 0);
             BitmapConvertAssert(typeof(Dxt1BitmapContent), Color.Green, 32, 34, 2);
             BitmapConvertAssert(typeof(Dxt1BitmapContent), Color.Blue, 8, 9, 0);
             BitmapConvertAssert(typeof(Dxt1BitmapContent), Transparent, 16, 16, 0);
             //BitmapConvertAssert(typeof(Dxt1BitmapContent), Grey16Premult, 16, 16, Transparent, 0);
-            BitmapConvertAssert(typeof(Dxt3BitmapContent), Color.Red, 64, 64, 0);
+            BitmapConvertAssert(typeof(Dxt3BitmapContent), Color.Red, 64, 64, 0); //
             BitmapConvertAssert(typeof(Dxt3BitmapContent), Color.Green, 32, 34, 2);
             BitmapConvertAssert(typeof(Dxt3BitmapContent), Color.Blue, 8, 9, 0);
             BitmapConvertAssert(typeof(Dxt3BitmapContent), Transparent, 16, 16, 0);
@@ -253,7 +262,7 @@ namespace MonoGame.Tests.ContentPipeline
             BitmapConvertAssert(typeof(Dxt5BitmapContent), Color.Blue, 8, 9, 0);
             BitmapConvertAssert(typeof(Dxt5BitmapContent), Transparent, 16, 16, 0);
             BitmapConvertAssert(typeof(Dxt5BitmapContent), Grey16Premult, 16, 16, Grey16Premult, 0);*/
-            //causes troubles:
+
             Console.WriteLine("The problematic one:");
             BitmapConvertAssert(typeof(Dxt3BitmapContent), Grey16Premult, 16, 16, Grey16Premult, 1);
         }

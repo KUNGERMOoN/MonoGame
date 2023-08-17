@@ -53,6 +53,9 @@
     <Reference Include="CppNet">
       <HintPath>..\ThirdParty\Dependencies\CppNet\CppNet.dll</HintPath>
     </Reference>
+    <Reference Include="Nvidia.TextureTools">
+      <HintPath>..\ThirdParty\Dependencies\NVTT\Nvidia.TextureTools.dll</HintPath>
+    </Reference>
     <Reference Include="SharpFont">
       <HintPath>..\ThirdParty\Dependencies\SharpFont\x64\SharpFont.dll</HintPath>
     </Reference>

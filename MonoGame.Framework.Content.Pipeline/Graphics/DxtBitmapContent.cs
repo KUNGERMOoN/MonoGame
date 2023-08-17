@@ -2,8 +2,12 @@
 // This file is subject to the terms and conditions defined in
 // file 'LICENSE.txt', which is part of this source code package.
 
+using BCnEncoder.Encoder;
+using BCnEncoder.Encoder.Options;
+using BCnEncoder.Shared;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Runtime.InteropServices;
 
 namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
 {
@@ -12,6 +16,8 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
         private byte[] _bitmapData;
         private int _blockSize;
         private SurfaceFormat _format;
+
+        private int _nvttWriteOffset;
 
         protected DxtBitmapContent(int blockSize)
         {
@@ -38,19 +44,65 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             _bitmapData = sourceData;
         }
 
-        private static bool CheckTransparency(byte[] data)
+        private void NvttBeginImage(int size, int width, int height, int depth, int face, int miplevel)
         {
-            bool hasTransparency = false;
+            _bitmapData = new byte[size];
+            _nvttWriteOffset = 0;
+        }
+
+        private bool NvttWriteImage(IntPtr data, int length)
+        {
+            Marshal.Copy(data, _bitmapData, _nvttWriteOffset, length);
+            _nvttWriteOffset += length;
+            return true;
+        }
+
+        private void NvttEndImage()
+        {
+        }
+
+        private static void PrepareNVTT(byte[] data)
+        {
+            for (var x = 0; x < data.Length; x += 4)
+            {
+                // NVTT wants BGRA where our source is RGBA so
+                // we swap the red and blue channels.
+                data[x] ^= data[x + 2];
+                data[x + 2] ^= data[x];
+                data[x] ^= data[x + 2];
+            }
+        }
+
+        private static void PrepareNVTT_DXT1(byte[] data, out bool hasTransparency)
+        {
+            hasTransparency = false;
 
             for (var x = 0; x < data.Length; x += 4)
             {
+                // NVTT wants BGRA where our source is RGBA so
+                // we swap the red and blue channels.
+                data[x] ^= data[x + 2];
+                data[x + 2] ^= data[x];
+                data[x] ^= data[x + 2];
+
                 // Look for non-opaque pixels.
                 var alpha = data[x + 3];
                 if (alpha < 255)
                     hasTransparency = true;
             }
+        }
 
-            return hasTransparency;
+        private static bool CheckTransparency(byte[] data)
+        {
+            for (var x = 0; x < data.Length; x += 4)
+            {
+                // Look for non-opaque pixels.
+                var alpha = data[x + 3];
+                if (alpha < 255)
+                    return true;
+            }
+
+            return false;
         }
 
         protected override bool TryCopyFrom(BitmapContent sourceBitmap, Rectangle sourceRegion, Rectangle destinationRegion)
@@ -91,7 +143,9 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             }
 
 
-            /*var colorBitmap = new PixelBitmapContent<Color>(sourceBitmap.Width, sourceBitmap.Height);
+
+
+            var colorBitmap = new PixelBitmapContent<Color>(sourceBitmap.Width, sourceBitmap.Height);
             BitmapContent.Copy(sourceBitmap, colorBitmap);
             var sourceData = colorBitmap.GetPixelData();
 
@@ -131,13 +185,13 @@ namespace Microsoft.Xna.Framework.Content.Pipeline.Graphics
             EncoderOutputOptions outputOptions = encoder.OutputOptions;
             outputOptions.Format = outputFormat;
             outputOptions.GenerateMipMaps = false;
-            outputOptions.Quality = CompressionQuality.Balanced;
+            outputOptions.Quality = CompressionQuality.Fast;
 
             _bitmapData = encoder.EncodeToRawBytes(
                 sourceData,
                 colorBitmap.Width,
                 colorBitmap.Height,
-                PixelFormat.Rgba32)[0]; //We use only the first mip's data*/
+                PixelFormat.Rgba32)[0]; //We use only the first mipmap's data
 
             Console.WriteLine(@$"Compressing texture completed:
 input:
